@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 public class TestCustomDebug : MonoBehaviour
 {
     /// <summary>
-    /// Debog.LogとカスタムDebugクラスの比較とサンプル
+    /// Debug.LogとカスタムDebugクラスの比較とサンプル
     /// </summary>
     /// <returns></returns>
     private async UniTaskVoid Start()
