@@ -13,7 +13,7 @@ public class FloatToInt : MonoBehaviour
     private void Start()
     {
        int result = CalcParameter(testParam, testRatio, 2);
-       DebugExtension.Log($"計算結果 : {result}");
+       AppDebugExtension.Log($"計算結果 : {result}");
     }
 
     /// <summary>
@@ -25,11 +25,11 @@ public class FloatToInt : MonoBehaviour
     private int CalcParameter(int param, float ratio, int significant = 0)
     {
         int sf = (int)Math.Pow(10, significant);
-        DebugExtension.Log($"有効数字倍率　： {sf}");
+        AppDebugExtension.Log($"有効数字倍率　： {sf}");
         ratio *= sf;
-        DebugExtension.Log($"int変換前　： {ratio:G17}");
+        AppDebugExtension.Log($"int変換前　： {ratio:G17}");
         int r = (int)Math.Round(ratio);
-        DebugExtension.Log($"int変換　： {r}");
+        AppDebugExtension.Log($"int変換　： {r}");
         return param * (sf * 100 + r) / (sf * 100);
     }
 
@@ -64,15 +64,15 @@ public class FloatToInt : MonoBehaviour
         int floor_float = (int)calc_float;
 
         //floatやdoubleなどの型をそのままStringクラスのFormatに代入すると、文字列補間で切り上げ処理が行われる.
-        DebugExtension.Log($"doubleの変数のまま出力 : {calc_doudble}");
-        DebugExtension.Log($"floatの変数のまま出力 : {calc_float}");
+        AppDebugExtension.Log($"doubleの変数のまま出力 : {calc_doudble}");
+        AppDebugExtension.Log($"floatの変数のまま出力 : {calc_float}");
 
         //文字列補間式（String interpolation）でFormatを使用する際に「：」の間にスペースを開けると正しく動作しない
-        DebugExtension.Log($"doubleの変数をGeneralFormatで出力 : {calc_doudble:G17}");
-        DebugExtension.Log($"floatの変数をGeneralFormatで出力 : {calc_float:G17}");
+        AppDebugExtension.Log($"doubleの変数をGeneralFormatで出力 : {calc_doudble:G17}");
+        AppDebugExtension.Log($"floatの変数をGeneralFormatで出力 : {calc_float:G17}");
 
-        DebugExtension.Log($"doubleの変数を切り捨ててから出力 : {floor_double}");
-        DebugExtension.Log($"floatの変数を切り捨ててから出力 : {floor_float}");
+        AppDebugExtension.Log($"doubleの変数を切り捨ててから出力 : {floor_double}");
+        AppDebugExtension.Log($"floatの変数を切り捨ててから出力 : {floor_float}");
 
 
         // int result = testParam * (100 + testRatio) / 100; //切り捨て処理と同じ

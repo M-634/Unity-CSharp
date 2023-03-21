@@ -227,6 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 738704263}
   - component: {fileID: 738704264}
+  - component: {fileID: 738704265}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -256,11 +257,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 738704262}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cddb9b75b9eaa349bc43eb488468a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testParam: 0
+  testRatio: 0
+--- !u!114 &738704265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738704262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea0881981c6c42449de316512178c724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 738704263}
+  path: Assets/_Samples/AddressableAssetsSystem/SpherePrefab.prefab
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

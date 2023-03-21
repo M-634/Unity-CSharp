@@ -7,7 +7,8 @@ using Debug = UnityEngine.Debug;
 /// Scriptable Define Symbolで「DEBUG_MODE」をシンボル
 /// として設定するとConsole Windowにログが表示される。
 /// </summary>
-public static class DebugExtension
+// ReSharper disable once CheckNamespace
+public static class AppDebugExtension
 {
     [Conditional("DEBUG_MODE")]
     public static void Log(object message)
