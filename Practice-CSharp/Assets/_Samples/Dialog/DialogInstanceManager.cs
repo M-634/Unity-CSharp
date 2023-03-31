@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Samples.Dialog
 {
     /******************************************************************
-     * DialogSceneに配置するコンポーネント。
-     * このコンポーネントはシングルトンで運用する。
-     *******************************************************************/
-
+    * DialogSceneに配置するコンポーネント。
+    * このコンポーネントはシングルトンで運用する。
+    *******************************************************************/
+    
     public interface IDialogInstanceManager
     {
         public (TPresenter, IDialogPerformer)GetInstanceDialogComponent<TPresenter, TModel>(TPresenter dialogSourcePrefab)
             where TModel : DialogModel
             where TPresenter : DialogPresenter<TModel>;
     }
-    
     
     /// <summary>
     /// ダイアログのインスタンスされたGameObjectを管理するクラス
@@ -28,11 +27,13 @@ namespace _Samples.Dialog
         
         private static DialogInstanceManager instance;
         public static DialogInstanceManager Instance => instance;
+
+        private readonly Stack<IDialogPerformer> instanceHideDialogList = new Stack<IDialogPerformer>();
         
         private IDialogPerformer currentDisplayDialog;
-        
-        //TODO@ test用でpublicにしている。実装が完了したらprivate readonly に変換させる
-        private readonly List<IDialogPerformer> instanceDialogList = new List<IDialogPerformer>();
+
+        private CompositeDisposable compositeDisposable;
+
 
         private void Awake()
         {
@@ -44,7 +45,11 @@ namespace _Samples.Dialog
             where TPresenter : DialogPresenter<TModel>
         {
             //開いているダイアログがあれば閉じる
-            currentDisplayDialog?.Hide();
+            if (currentDisplayDialog != null)
+            {
+                currentDisplayDialog.Hide();
+                instanceHideDialogList.Push(currentDisplayDialog);
+            }
             
             //ダイアログオブジェクトの生成
             TPresenter instancePresenter =  Instantiate(dialogSourcePrefab, root);
@@ -56,11 +61,35 @@ namespace _Samples.Dialog
                 performer = instancePresenter.AddComponent<DialogPerformer>();
             }
             
-            performer.Hide();
+            SetDisplayDialog(performer);
             
-            currentDisplayDialog = performer;
-            instanceDialogList.Add(performer);
             return (instancePresenter, performer);
+        }
+
+
+        private void SetDisplayDialog(IDialogPerformer dialogPerformer)
+        {
+            dialogPerformer.Hide();
+            
+            compositeDisposable?.Dispose();
+            compositeDisposable = new CompositeDisposable();
+            
+            currentDisplayDialog = dialogPerformer;
+
+            currentDisplayDialog.OnEndPerformer.Subscribe(_ =>
+            {
+                if (instanceHideDialogList.Count < 1)
+                {
+                    compositeDisposable?.Dispose();
+                    return;
+                }
+                
+                IDialogPerformer nextDialogPerformer = instanceHideDialogList.Pop();
+                SetDisplayDialog(nextDialogPerformer);
+                
+            }).AddTo(compositeDisposable);
+
+            currentDisplayDialog.Open();
         }
     }
 }

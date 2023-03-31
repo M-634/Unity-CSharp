@@ -59,7 +59,7 @@ namespace _Samples.Dialog
         {
             OpenFunc = null;
             CloseFunc = null;
-            Disposable.Dispose();
+            Disposable?.Dispose();
         }
     }
 }

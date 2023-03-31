@@ -17,11 +17,6 @@ namespace _Samples.Dialog
         }
 
         public abstract void Run();
-
-        private void OnDestroy()
-        {
-            model.Dispose();
-        }
     }
     
 }

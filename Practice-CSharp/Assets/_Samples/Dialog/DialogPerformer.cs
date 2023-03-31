@@ -1,5 +1,7 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UniRx;
 using UnityEngine;
 
 namespace _Samples.Dialog
@@ -12,6 +14,8 @@ namespace _Samples.Dialog
         UniTask Open();
 
         UniTask Close();
+
+        IObservable<Unit> OnEndPerformer { get; }
     }
     
     /// <summary>
@@ -24,7 +28,10 @@ namespace _Samples.Dialog
 
         [SerializeField] 
         private DialogPerformerParamSo dialogPerformerParam;
-        
+
+        public IObservable<Unit> OnEndPerformer => onEndPerformer;
+        private readonly Subject<Unit> onEndPerformer = new Subject<Unit>();
+
         public void Hide()
         {
             rectTransform.DOScale(0f, 0f);
@@ -44,6 +51,7 @@ namespace _Samples.Dialog
         public async UniTask Close()
         {
             await rectTransform.DOScale(0f, dialogPerformerParam.CloseDuration).ToUniTask();
+            onEndPerformer.OnNext(Unit.Default);
             Destroy(gameObject);
         }
     }
