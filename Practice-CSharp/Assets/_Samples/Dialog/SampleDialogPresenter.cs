@@ -7,11 +7,22 @@ namespace _Samples.Dialog
 {
     public class SampleDialogPresenter : DialogPresenter<SampleDialogModel>
     {
+
+        [SerializeField] 
+        private Button createNewDialogButton;
+        
         [SerializeField] 
         private Button closeButton;
         
         public override void Run()
         {
+            createNewDialogButton
+                .OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    model.CreateDialog();
+                }).AddTo(this);
+                
             closeButton
                 .OnClickAsObservable()
                 .Subscribe(_=>
@@ -28,6 +39,11 @@ namespace _Samples.Dialog
         public SampleDialogModel(IDialogCreator dialogCreator)
         {
             this.dialogCreator = dialogCreator;
+        }
+
+        public void CreateDialog()
+        {
+            dialogCreator.CreateDialog<SampleDialogPresenter, SampleDialogModel>(new SampleDialogModel(dialogCreator));
         }
     }
 }

@@ -1,15 +1,13 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using UniRx;
 using UnityEngine;
 
 namespace _Samples.Dialog
 {
-
+    
     public interface IDialogPerformer
     {
-        void Init();
+        void Hide();
 
         UniTask Open();
 
@@ -27,13 +25,16 @@ namespace _Samples.Dialog
         [SerializeField] 
         private DialogPerformerParamSo dialogPerformerParam;
         
-        public void Init()
+        public void Hide()
         {
             rectTransform.DOScale(0f, 0f);
+            gameObject.SetActive(false);
         }
 
         public async UniTask Open()
         {
+            gameObject.SetActive(true);
+            
             //きれいにダイアログを開くために、1フレーム待機させる.
             await UniTask.WaitForEndOfFrame(this).SuppressCancellationThrow();
          
@@ -43,6 +44,7 @@ namespace _Samples.Dialog
         public async UniTask Close()
         {
             await rectTransform.DOScale(0f, dialogPerformerParam.CloseDuration).ToUniTask();
+            Destroy(gameObject);
         }
     }
 }

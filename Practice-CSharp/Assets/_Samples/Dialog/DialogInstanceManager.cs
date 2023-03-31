@@ -10,7 +10,7 @@ namespace _Samples.Dialog
      * このコンポーネントはシングルトンで運用する。
      *******************************************************************/
 
-    public interface IDialogGenerator
+    public interface IDialogInstanceManager
     {
         public (TPresenter, IDialogPerformer)GetInstanceDialogComponent<TPresenter, TModel>(TPresenter dialogSourcePrefab)
             where TModel : DialogModel
@@ -19,21 +19,20 @@ namespace _Samples.Dialog
     
     
     /// <summary>
-    /// DialogをObjectとして実際にゲームシーンに生成する役割をするクラス
-    /// Instanceを取得する際は、各シーンクラスで取得すること
+    /// ダイアログのインスタンスされたGameObjectを管理するクラス
     /// </summary>
-    public class DialogGenerator : MonoBehaviour, IDialogGenerator
+    public class DialogInstanceManager : MonoBehaviour, IDialogInstanceManager
     {
         [SerializeField]
         private Transform root;
         
-        private static DialogGenerator instance;
-        public static DialogGenerator Instance => instance;
+        private static DialogInstanceManager instance;
+        public static DialogInstanceManager Instance => instance;
         
-        private IDialogPerformer currentInstanceDialog;
+        private IDialogPerformer currentDisplayDialog;
         
         //TODO@ test用でpublicにしている。実装が完了したらprivate readonly に変換させる
-        public List<IDialogPerformer> instanceDialogList = new List<IDialogPerformer>();
+        private readonly List<IDialogPerformer> instanceDialogList = new List<IDialogPerformer>();
 
         private void Awake()
         {
@@ -45,10 +44,7 @@ namespace _Samples.Dialog
             where TPresenter : DialogPresenter<TModel>
         {
             //開いているダイアログがあれば閉じる
-            if (currentInstanceDialog != null)
-            { 
-                currentInstanceDialog.Close().Forget();
-            }
+            currentDisplayDialog?.Hide();
             
             //ダイアログオブジェクトの生成
             TPresenter instancePresenter =  Instantiate(dialogSourcePrefab, root);
@@ -60,9 +56,9 @@ namespace _Samples.Dialog
                 performer = instancePresenter.AddComponent<DialogPerformer>();
             }
             
-            performer.Init();
+            performer.Hide();
             
-            currentInstanceDialog = performer;
+            currentDisplayDialog = performer;
             instanceDialogList.Add(performer);
             return (instancePresenter, performer);
         }

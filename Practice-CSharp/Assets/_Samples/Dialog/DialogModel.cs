@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using Unit = UniRx.Unit;
@@ -19,6 +18,8 @@ namespace _Samples.Dialog
         
         private event Func<UniTask> OpenFunc;
         private event Func<UniTask> CloseFunc;
+        
+        public  CompositeDisposable Disposable { get; } = new CompositeDisposable();
 
         public void InjectPerformerFunction(IDialogPerformer dialogPerformer)
         {
@@ -58,7 +59,7 @@ namespace _Samples.Dialog
         {
             OpenFunc = null;
             CloseFunc = null;
-            onCloseComplete.OnNext(Unit.Default);
+            Disposable.Dispose();
         }
     }
 }

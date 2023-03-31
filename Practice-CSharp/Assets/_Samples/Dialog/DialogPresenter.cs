@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _Samples.Dialog
 {
@@ -19,7 +18,7 @@ namespace _Samples.Dialog
 
         public abstract void Run();
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             model.Dispose();
         }

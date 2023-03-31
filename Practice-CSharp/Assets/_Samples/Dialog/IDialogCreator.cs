@@ -14,12 +14,12 @@ namespace _Samples.Dialog
     public class DialogCreator : IDialogCreator
     {
         private readonly IEnumerable<GameObject> dialogPrefabs;
-        private readonly IDialogGenerator dialogGenerator;
+        private readonly IDialogInstanceManager dialogInstanceManager;
         
-        public DialogCreator(IEnumerable<GameObject> dialogPrefabs, IDialogGenerator dialogGenerator)
+        public DialogCreator(IEnumerable<GameObject> dialogPrefabs, IDialogInstanceManager dialogInstanceManager)
         {
             this.dialogPrefabs = dialogPrefabs;
-            this.dialogGenerator = dialogGenerator;
+            this.dialogInstanceManager = dialogInstanceManager;
         }
         
         /// <summary>
@@ -40,13 +40,13 @@ namespace _Samples.Dialog
                 return;
             }
 
-            if (DialogGenerator.Instance == null)
+            if (DialogInstanceManager.Instance == null)
             {
                 AppDebugExtension.LogError($"ダイアログをインスタンスするDialogManagerが存在しないよ！");
                 return;
             }
 
-            (TPresenter presenterInstance, IDialogPerformer performer) = dialogGenerator.GetInstanceDialogComponent<TPresenter, TModel>(presenterSource);
+            (TPresenter presenterInstance, IDialogPerformer performer) = dialogInstanceManager.GetInstanceDialogComponent<TPresenter, TModel>(presenterSource);
 
             //inject performer to model
             model.InjectPerformerFunction(performer);

@@ -16,23 +16,19 @@ namespace _Samples.Dialog
         
         private void Start()
         {
-            dialogCreator = new DialogCreator(dialogPrefabs, DialogGenerator.Instance);
-            
-            CompositeDisposable compositeDisposable = new CompositeDisposable();
+            dialogCreator = new DialogCreator(dialogPrefabs, DialogInstanceManager.Instance);
             
             SampleDialogModel model = new SampleDialogModel(dialogCreator);
             
             model.OnOpenComplete.Subscribe(_ =>
             {
                 AppDebugExtension.Log("開いた！");
-            }).AddTo(compositeDisposable);
+            }).AddTo(model.Disposable);
 
             model.OnCloseComplete.Subscribe(_ =>
             {
                 AppDebugExtension.Log("閉じた！");
-                compositeDisposable.Dispose();
-                
-            }).AddTo(compositeDisposable);
+            }).AddTo(model.Disposable);
             
             dialogCreator.CreateDialog<SampleDialogPresenter, SampleDialogModel>(model);
         }
