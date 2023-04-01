@@ -2,6 +2,7 @@
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Samples.Dialog
 {
@@ -24,6 +25,9 @@ namespace _Samples.Dialog
     {
         [SerializeField]
         private Transform root;
+
+        [SerializeField] 
+        private Image backGroundImage;
         
         private static DialogInstanceManager instance;
         public static DialogInstanceManager Instance => instance;
@@ -33,11 +37,11 @@ namespace _Samples.Dialog
         private IDialogPerformer currentDisplayDialog;
 
         private CompositeDisposable compositeDisposable;
-
-
+        
         private void Awake()
         {
             instance = this;
+            backGroundImage.enabled = false;
         }
         
         public  (TPresenter, IDialogPerformer) GetInstanceDialogComponent<TPresenter, TModel>(TPresenter dialogSourcePrefab)
@@ -75,12 +79,14 @@ namespace _Samples.Dialog
             compositeDisposable = new CompositeDisposable();
             
             currentDisplayDialog = dialogPerformer;
+            backGroundImage.enabled = true;
 
             currentDisplayDialog.OnEndPerformer.Subscribe(_ =>
             {
                 if (instanceHideDialogList.Count < 1)
                 {
                     compositeDisposable?.Dispose();
+                    backGroundImage.enabled = false;
                     return;
                 }
                 
