@@ -7,6 +7,7 @@ namespace _Samples.Dialog
     /// Dialogの各種Presenterを作る際は、このクラスを継承すること
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
+    [RequireComponent(typeof(DialogPerformer))]
     public abstract class DialogPresenter<TModel> : MonoBehaviour where TModel : DialogModel
     {
         protected TModel model;

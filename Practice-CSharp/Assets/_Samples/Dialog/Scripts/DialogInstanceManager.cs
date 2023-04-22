@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -83,9 +84,10 @@ namespace _Samples.Dialog
 
             currentDisplayDialog.OnEndPerformer.Subscribe(_ =>
             {
-                if (instanceHideDialogList.Count < 1)
+                if (!instanceHideDialogList.Any())
                 {
                     compositeDisposable?.Dispose();
+                    currentDisplayDialog = null;
                     backGroundImage.enabled = false;
                     return;
                 }

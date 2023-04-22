@@ -1,6 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Samples.Dialog
 {
@@ -11,15 +11,26 @@ namespace _Samples.Dialog
         /// </summary>
         [SerializeField] 
         private GameObject[] dialogPrefabs;
-        
+
+        [SerializeField]
+        private Button openDialogButton;
+
         private IDialogCreator dialogCreator;
         
         private void Start()
         {
             dialogCreator = new DialogCreator(dialogPrefabs, DialogInstanceManager.Instance);
-            
-            SampleDialogModel model = new SampleDialogModel(dialogCreator);
-            
+
+            openDialogButton
+                .OnClickAsObservable()
+                .Subscribe(_=> OpenDialogButton())
+                .AddTo(this);
+        }
+
+        private void OpenDialogButton()
+        {
+           OneButtonDialogModel model = new OneButtonDialogModel(); 
+           
             model.OnOpenComplete.Subscribe(_ =>
             {
                 AppDebugExtension.Log("開いた！");
@@ -30,7 +41,7 @@ namespace _Samples.Dialog
                 AppDebugExtension.Log("閉じた！");
             }).AddTo(model.Disposable);
             
-            dialogCreator.CreateDialog<SampleDialogPresenter, SampleDialogModel>(model);
+            dialogCreator.CreateDialog<OneButtonDialogPresenter, OneButtonDialogModel>(model);
         }
     }
 }

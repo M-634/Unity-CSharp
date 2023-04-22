@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace _Samples.Dialog
 {
@@ -31,15 +32,19 @@ namespace _Samples.Dialog
 
         public IObservable<Unit> OnEndPerformer => onEndPerformer;
         private readonly Subject<Unit> onEndPerformer = new Subject<Unit>();
-
+        
         public void Hide()
         {
+            Assert.IsNotNull(gameObject);
+            
             rectTransform.DOScale(0f, 0f);
             gameObject.SetActive(false);
         }
 
         public async UniTask Open()
         {
+            Assert.IsNotNull(gameObject);
+            
             gameObject.SetActive(true);
             
             //きれいにダイアログを開くために、1フレーム待機させる.
@@ -50,6 +55,8 @@ namespace _Samples.Dialog
 
         public async UniTask Close()
         {
+            Assert.IsNotNull(gameObject);
+            
             await rectTransform.DOScale(0f, dialogPerformerParam.CloseDuration).ToUniTask();
             onEndPerformer.OnNext(Unit.Default);
             Destroy(gameObject);
